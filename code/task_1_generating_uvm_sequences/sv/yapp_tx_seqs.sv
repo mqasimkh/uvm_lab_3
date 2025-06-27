@@ -106,3 +106,73 @@ class yapp_012_seq extends yapp_base_seq;
   endtask: body
 
 endclass: yapp_012_seq
+
+//--------------------------------------------------------------------------------
+//                              yapp_111_seq
+//--------------------------------------------------------------------------------
+
+class yapp_111_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_111_seq)
+
+  function new (string name = "yapp_111_seq");
+    super.new(name);
+  endfunction: new
+
+  task body();
+    `uvm_info(get_type_name(), "Executing yapp_111_seq seq", UVM_LOW)
+    repeat(3)
+      `uvm_do_with(req, {addr == 1;})
+  endtask: body
+
+endclass: yapp_111_seq
+
+//--------------------------------------------------------------------------------
+//                              yapp_repeat_addr_seq
+//--------------------------------------------------------------------------------
+
+class yapp_repeat_addr_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_repeat_addr_seq)
+
+  function new (string name = "yapp_repeat_addr_seq");
+    super.new(name);
+  endfunction: new
+
+  task body();
+    int prev_addr;
+    bit ok;
+    `uvm_info(get_type_name(), "Executing yapp_repeat_addr_seq seq", UVM_LOW)
+    start_item(req);
+    ok = req.randomize();
+    prev_addr = req.addr;
+    finish_item(req);
+    `uvm_do_with(req, {addr == prev_addr;})
+  endtask: body
+
+endclass: yapp_repeat_addr_seq
+
+//--------------------------------------------------------------------------------
+//                              yapp_incr_payload_seq
+//--------------------------------------------------------------------------------
+
+class yapp_incr_payload_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_incr_payload_seq)
+
+  function new (string name = "yapp_incr_payload_seq");
+    super.new(name);
+  endfunction:new
+
+  task body();
+    bit ok;
+    `uvm_info(get_type_name(), "Executing yapp_incr_payload_seq seq", UVM_LOW)
+
+    `uvm_create(req)
+    ok = req.randomize();
+    assert(ok);
+    req.payload = new [req.length];
+    foreach(req.payload[i])
+      req.payload[i] = i;
+
+    `uvm_send(req)
+  endtask: body
+
+endclass: yapp_incr_payload_seq
