@@ -1,8 +1,8 @@
-class yapp_env extends uvm_env;
+class yapp_tx_env extends uvm_env;
 
-    `uvm_component_utils(yapp_env)
+    `uvm_component_utils(yapp_tx_env)
 
-    function new (string name = "yapp_env", uvm_component parent);
+    function new (string name = "yapp_tx_env", uvm_component parent);
         super.new(name, parent);
     endfunction: new
 
@@ -19,4 +19,4 @@ class yapp_env extends uvm_env;
         `uvm_info(get_type_name(), "Running Simulation ...", UVM_HIGH);
     endfunction: start_of_simulation_phase
 
-endclass: yapp_env
+endclass: yapp_tx_env

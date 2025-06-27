@@ -8,6 +8,6 @@ package yapp_pkg;
     `include "./sv/yapp_tx_seqs.sv"
     `include "./sv/yapp_tx_driver.sv"
     `include "./sv/yapp_tx_agent.sv"
-    `include "./sv/yapp_env.sv"
+    `include "./sv/yapp_tx_env.sv"
 
 endpackage: yapp_pkg

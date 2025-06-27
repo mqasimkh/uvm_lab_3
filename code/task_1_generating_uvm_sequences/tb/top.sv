@@ -7,7 +7,7 @@ module top;
     `include "router_test_lib.sv"
 
     initial begin
-        run_test("set_config_test");
+        run_test("incr_payload_test");
     end
 
     // yapp_packet p1, p2, p3;

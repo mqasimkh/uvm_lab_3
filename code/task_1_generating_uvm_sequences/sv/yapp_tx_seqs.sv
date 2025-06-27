@@ -69,3 +69,20 @@ class yapp_5_packets extends yapp_base_seq;
   
 endclass : yapp_5_packets
 
+//--------------------------------------------------------------------------------
+//                              yapp_1_seq
+//--------------------------------------------------------------------------------
+
+class yapp_1_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_1_seq)
+
+  function new (string name = "yapp_1_seq");
+    super.new(name);
+  endfunction: new
+
+  virtual task body();
+    `uvm_info(get_type_name(), "Executing yapp_1_seq sequence", UVM_LOW)
+    `uvm_do_with(req, {addr==1;})
+  endtask: body
+
+endclass: yapp_1_seq
