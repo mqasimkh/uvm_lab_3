@@ -184,6 +184,42 @@ class yapp_incr_payload_seq extends yapp_base_seq;
 endclass: yapp_incr_payload_seq
 ```
 
-Ran the test again to confirm if correct packets are generated and packets not generated and got this error:
+Ran the test again to confirm if correct packets are generated, and all good till here:
 
 ![screenshot-6](/screenshots/6.png)
+
+#### yapp_exhaustive_seq
+
+Created `yapp_exhaustive_seq` sequence which is nested sequence where created handles for all seuqneces and then created them using `uvm_do` macro. 
+
+Since `uvm_do` macro blocking, all these sequences will be implemented thru sequencer sequentially.
+
+```systemverilog
+class yapp_exhaustive_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_exhaustive_seq)
+
+  function new (string name = "yapp_exhaustive_seq");
+    super.new(name);
+  endfunction: new
+
+  yapp_1_seq s1;
+  yapp_012_seq s2;
+  yapp_111_seq s3;
+  yapp_repeat_addr_seq s4;
+  yapp_incr_payload_seq s5;
+
+  task body();
+    `uvm_info(get_type_name(), "Executing yapp_exhaustive_seq seq", UVM_LOW)
+
+    `uvm_do(s1)
+    `uvm_do(s2)
+    `uvm_do(s3)
+    `uvm_do(s4)
+    `uvm_do(s5)
+
+  endtask: body
+
+endclass: yapp_base_seq
+```
+
+Ran the test again to confirm if correct packets are generated, and doesn't seem good. Something wrong, so will try to fix it and update again.
