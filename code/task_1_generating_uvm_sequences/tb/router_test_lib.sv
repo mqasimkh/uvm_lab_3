@@ -9,9 +9,9 @@ class base_test extends uvm_test;
     router_tb tb;
 
     function void build_phase(uvm_phase phase);
-        // uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", 
-        // "default_sequence",
-        // yapp_5_packets::get_type());
+        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", 
+        "default_sequence",
+        yapp_5_packets::get_type());
 
         //tb = new("tb", this);
         tb = router_tb::type_id::create("tb", this);
@@ -81,9 +81,9 @@ class incr_payload_test extends base_test;
     endfunction
 
     function void build_phase(uvm_phase phase);
-        set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
-        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_1_seq::get_type());
         super.build_phase(phase);
+        set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
+        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_012_seq::get_type());
     endfunction: build_phase
 
 endclass: incr_payload_test

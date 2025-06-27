@@ -45,9 +45,9 @@ class incr_payload_test extends base_test;
     endfunction
 
     function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
         set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
         uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_1_seq::get_type());
-        super.build_phase(phase);
     endfunction: build_phase
 
 endclass: incr_payload_test
@@ -62,3 +62,36 @@ The topology also confirms that the new test was executed and the sequence is al
 `packet`
 
 ![screenshot-2](/screenshots/2.png)
+
+#### yapp_012_seq
+
+Created a new sequence named `yapp_012_seq` which generates 3 packets with addr 0, 1 & 2. 
+
+```systemverilog
+class yapp_012_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_012_seq)
+
+  function new (string name = "yapp_012_seq");
+    super.new(name);
+  endfunction: new
+
+  virtual task body();
+    `uvm_info(get_type_name(), "Executing yapp_012 seq", UVM_LOW)
+      `uvm_do_with(req, {addr == 0;})
+      `uvm_do_with(req, {addr == 1;})
+      `uvm_do_with(req, {addr == 2;})
+  endtask: body
+
+endclass: yapp_012_seq
+```
+
+Ran the test with `short_yapp_packet` and as expected the first 2 packets with `addr = 0` and `addr = 1` were generated.
+
+`addr = 2` was not generated because in `short_yapp_packet` we added constraint that addr should be 0 or 1. So gave constraint conflict error.
+
+![screenshot-2](/screenshots/2.png)
+
+#### yapp_111_seq
+
+
+#### yapp_repeat_addr_seq

@@ -86,3 +86,23 @@ class yapp_1_seq extends yapp_base_seq;
   endtask: body
 
 endclass: yapp_1_seq
+
+//--------------------------------------------------------------------------------
+//                              yapp_012_seq
+//--------------------------------------------------------------------------------
+
+class yapp_012_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_012_seq)
+
+  function new (string name = "yapp_012_seq");
+    super.new(name);
+  endfunction: new
+
+  virtual task body();
+    `uvm_info(get_type_name(), "Executing yapp_012 seq", UVM_LOW)
+      `uvm_do_with(req, {addr == 0;})
+      `uvm_do_with(req, {addr == 1;})
+      `uvm_do_with(req, {addr == 2;})
+  endtask: body
+
+endclass: yapp_012_seq
