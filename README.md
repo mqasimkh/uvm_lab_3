@@ -371,3 +371,130 @@ Added `yapp_rnd_seq` and `six_yapp_seq` inside `yapp_exhaustive_seq` and ran the
 ![screenshot-15](/screenshots/15.png)
 
 ---
+
+## Task_2
+
+In this task, need to connect the YAPP UVC created in `task_1` with the `DUT` which is `YAPP Router` using `virtual interface.
+
+### 1. moving files
+
+Added `yapp_if.sv` interface in the `sv` folder as instructed in the manual. The interface has 3 methods:
+
+1. `send_to_dut`
+2. `collect_packet`
+3. `yapp_suspended`
+
+To make connection to interface easy and avoid writing `uvm_config_db#(virtual yapp_if)` full again and again, made a `typedef` for this in `yapp_pkg.sv`.
+
+### 2. Updating yapp_tx_monitor
+
+Updated the `yapp_tx_monitor` by declaring a virutal interface there and then adding in `connect_phase()` method, using config `get method` to assign viff from config db.
+
+```systemverilog
+  function void connect_phase(uvm_phase phase);
+
+  if (!yapp_vif_config::get(this,"","vif", vif))
+    `uvm_error("NOVIF", "VIF in Monitor is Not SET...")
+
+  endfunction: connect_phase
+```
+
+In the `run_phase()` method, called `collect_packet()` method in `vif` to capture the packet data and store in `pkt` variable.
+
+```systemverilog
+  task run_phase(uvm_phase phase);
+    @(posedge vif.reset)
+    @(negedge vif.reset)
+    `uvm_info(get_type_name(), "Detected Reset Done", UVM_MEDIUM)
+
+    forever begin
+      pkt = yapp_packet::type_id::create("pkt", this);
+
+      fork
+        vif.collect_packet(pkt.length, pkt.addr, pkt.payload, pkt.parity);
+        @(posedge vif.monstart) void'(begin_tr(pkt, "Monitor_YAPP_Packet"));
+      join
+
+      pkt.parity_type = (pkt.parity == pkt.calc_parity()) ? GOOD_PARITY : BAD_PARITY;
+
+      end_tr(pkt);
+      `uvm_info(get_type_name(), $sformatf("Packet Collected :\n%s", pkt.sprint()), UVM_LOW)
+      num_pkt_col++;
+    end
+
+  endtask: run_phase
+```
+
+### 3. Updating yapp_tx_driver
+
+Updated the `yapp_tx_driver` by declaring a virutal interface there and then adding in `connect_phase()` method, using config `get method` to assign viff from config db.
+
+In driver `run_phase()` method, called `get_and_drive()` and `reset_signals()` methods which were defined in `driver_example.sv` file provided in manual.
+
+```systemverilog
+  task run_phase(uvm_phase phase);
+    fork   
+      get_and_drive();
+      reset_signals();
+    join
+  endtask: run_phase
+```
+
+### 4. Adding new test to router_test_lib
+
+Added new test named `task_2_test` in the `router_test_lib` and set default sequence to `yapp_012_seq` which sends packets to all 3 chanels i.e. addr 0, addr 1 and addr 2.
+
+```systemverilog
+class task_2_test extends base_test;
+    `uvm_component_utils(task_2_test)
+
+    function new (string name = "task_2_test", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
+        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_012_seq::get_type());
+    endfunction: build_phase
+
+endclass: task_2_test
+```
+
+Updated the `base_test()` and added `run_phase()` methoid there (this will be inherited in all child classes) and there set the drain time for objection as `200ns`.
+
+```systemverilog
+  task run_phase (uvm_phase phase);
+    uvm_objection obj;
+    obj = phase.get_objection();
+    obj.set_drain_time(this, 200ns);
+  endtask: run_phase
+```
+
+### 5. Testing without DUT
+
+Renamed the `top.sv` to `tb_top.sv` and set used `config set` method to connect the interface instantiated in top module with `virtual interface` inside `driver` and `monitor`.
+
+Since `in0` is instantiated in `hw_top` so added its path.
+
+Now `in0` is connected `vif` in `driver` and `monitor`.
+
+```systemverilog
+yapp_vif_config::set(null,"uvm_test_top.tb.uvc.agent.*", "vif", hw_top.in0);
+```
+
+Updated the `file.f` by adding new files i.e. `yapp_if` and also the default timescale.
+
+Ran the test. Results are as expected.
+
+Since it is not connected to DUT, the driver is sending packet and monitor is receiving it.
+
+As `yapp_012_seq` sequence is run, 3 packets are genereated, 1 with `addr == 0`, second with  `addr == 1` and 3rd with  `addr == 2`.
+
+`Driver` and `Monitor` data is same. See screenshots below:
+
+![screenshot-16](/screenshots/16.png)
+
+![screenshot-17](/screenshots/17.png)
+
+![screenshot-18](/screenshots/17.png)
