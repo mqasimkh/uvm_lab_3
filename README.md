@@ -501,6 +501,12 @@ As `yapp_012_seq` sequence is run, 3 packets are genereated, 1 with `addr == 0`,
 
 ### 6. Connecting to DUT
 
+Connected with DUT and ran the simulation.
+
+The first 
+
+Results as expected.
+
 ![screenshot-19](/screenshots/19.png)
 
 ![screenshot-20](/screenshots/20.png)
