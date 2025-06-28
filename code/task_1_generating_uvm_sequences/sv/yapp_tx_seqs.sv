@@ -187,6 +187,54 @@ class yapp_incr_payload_seq extends yapp_base_seq;
 
 endclass: yapp_incr_payload_seq
 
+//--------------------------------------------------------------------------------
+//                              yapp_rnd_seq
+//--------------------------------------------------------------------------------
+
+class yapp_rnd_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_rnd_seq)
+
+  rand int count;
+
+  function new (string name = "yapp_rnd_seq");
+    super.new(name);
+  endfunction: new
+
+  task body();
+    bit ok;
+    `uvm_info(get_type_name(), "Executing yapp_rnd_seq sequence", UVM_LOW)
+    ok = randomize() with {count inside {[1:10]};};
+    `uvm_info("Count", $sformatf("Count : %0d", count), UVM_LOW)
+    assert (ok);
+    repeat(count)
+    begin
+      `uvm_do(req);
+    end
+  endtask: body
+
+endclass: yapp_rnd_seq
+
+//--------------------------------------------------------------------------------
+//                              six_yapp_seq
+//--------------------------------------------------------------------------------
+
+class six_yapp_seq extends yapp_base_seq;
+  `uvm_object_utils(six_yapp_seq)
+
+  function new (string name = "six_yapp_seq");
+    super.new(name);
+  endfunction: new
+
+  yapp_rnd_seq s1;
+
+  task body();
+    `uvm_create(s1)
+    `uvm_info(get_type_name(), "Executing six_yapp_seq sequence", UVM_LOW)
+    s1.count = 6;
+    `uvm_do(s1)
+  endtask: body
+  
+endclass: six_yapp_seq
 
 //--------------------------------------------------------------------------------
 //                              yapp_exhaustive_seq
@@ -204,6 +252,8 @@ class yapp_exhaustive_seq extends yapp_base_seq;
   yapp_111_seq s3;
   yapp_repeat_addr_seq s4;
   yapp_incr_payload_seq s5;
+  yapp_rnd_seq s6;
+  six_yapp_seq s7;
 
   task body();
     `uvm_info(get_type_name(), "Executing yapp_exhaustive_seq seq", UVM_LOW)
@@ -213,6 +263,8 @@ class yapp_exhaustive_seq extends yapp_base_seq;
     `uvm_do(s3)
     `uvm_do(s4)
     `uvm_do(s5)
+    `uvm_do(s6)
+    `uvm_do(s7)
 
   endtask: body
 

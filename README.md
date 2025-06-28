@@ -290,3 +290,68 @@ Now in `yapp_012_seq` sequence, select `req.select = 1` and then manually create
 Re-ran the test, and now all contraint conflicts are clear. Checked the transactions in waveform window and all are created.
 
 ![screenshot-11](/screenshots/11.png)
+
+#### yapp_rnd_seq
+
+Created `yapp_rnd_seq` sequence which generates random number of packets between `1` & `10`.
+
+```systemverilog
+class yapp_rnd_seq extends yapp_base_seq;
+  `uvm_object_utils(yapp_rnd_seq)
+
+  rand int count;
+
+  function new (string name = "yapp_rnd_seq");
+    super.new(name);
+  endfunction: new
+
+  task body();
+    bit ok;
+    `uvm_info(get_type_name(), "Executing yapp_rnd_seq sequence", UVM_LOW)
+    ok = randomize() with {count inside {[1:10]};};
+    `uvm_info("Count", $sformatf("Count : %0d", count), UVM_LOW)
+    assert (ok);
+    repeat(count)
+    begin
+      `uvm_do(req);
+    end
+  endtask: body
+
+endclass: yapp_rnd_seq
+```
+Tested the sequence and it works fine.
+
+`Count == 9`, so 9 packets should be generated:
+
+![screenshot-12](/screenshots/12.png)
+
+9 Packets generated.
+
+![screenshot-13](/screenshots/13.png)
+
+#### six_yapp_seq
+
+Created `six_yapp_seq` nested sequence where `yapp_rnd_seq` count constraint is fixed to `6`.
+
+```systemverilog
+class six_yapp_seq extends yapp_base_seq;
+  `uvm_object_utils(six_yapp_seq)
+
+  function new (string name = "six_yapp_seq");
+    super.new(name);
+  endfunction: new
+
+  yapp_rnd_seq s1;
+
+  task body();
+    `uvm_create(s1)
+    `uvm_info(get_type_name(), "Executing six_yapp_seq sequence", UVM_LOW)
+    s1.count = 6;
+    `uvm_do(s1)
+  endtask: body
+  
+endclass: six_yapp_seq
+```
+Tested and all good.
+
+![screenshot-14](/screenshots/14.png)
