@@ -28,6 +28,13 @@ class base_test extends uvm_test;
         uvm_top.print_topology();
     endfunction: end_of_elaboration_phase
 
+    //new added
+    task run_phase (uvm_phase phase);
+        uvm_objection obj;
+        obj = phase.get_objection();
+        obj.set_drain_time(this, 200ns);
+    endtask: run_phase
+
     function void check_phase(uvm_phase phase);
         check_config_usage();
     endfunction: check_phase
@@ -106,3 +113,22 @@ class exhaustive_seq_test extends base_test;
     endfunction: build_phase
 
 endclass: exhaustive_seq_test
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////                task_2_test                          ////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class task_2_test extends base_test;
+    `uvm_component_utils(task_2_test)
+
+    function new (string name = "task_2_test", uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
+        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_012_seq::get_type());
+    endfunction: build_phase
+
+endclass: task_2_test

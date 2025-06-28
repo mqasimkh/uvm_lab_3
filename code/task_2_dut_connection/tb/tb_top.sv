@@ -1,4 +1,4 @@
-module top;
+module tb_top;
 
     import uvm_pkg::*;
     `include "uvm_macros.svh"
@@ -7,7 +7,8 @@ module top;
     `include "router_test_lib.sv"
 
     initial begin
-        run_test("exhaustive_seq_test");
+        yapp_vif_config::set(null,"uvm_test_top.tb.uvc.agent.*", "vif", hw_top.in0);
+        run_test("task_2_test");
     end
 
 endmodule

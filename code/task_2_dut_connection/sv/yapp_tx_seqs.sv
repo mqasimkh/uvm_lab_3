@@ -277,4 +277,4 @@ class yapp_exhaustive_seq extends yapp_base_seq;
 
   endtask: body
 
-endclass: yapp_base_seq
+endclass: yapp_exhaustive_seq
