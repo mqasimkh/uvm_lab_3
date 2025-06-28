@@ -154,6 +154,16 @@ Ran the test again to confirm if correct packets are generated and packets not g
 ```systemverilog
 UVM_FATAL @ 0: uvm_test_top.tb.uvc.agent.sequencer@@yapp_repeat_addr_seq [NULLITM] attempting to start a null item from sequence 'uvm_test_top.tb.uvc.agent.sequencer.yapp_repeat_addr_seq'
 ```
+FIXED the error. It was because I was using start_item() & finish_item() methods of sequence without constructing `req`. By default `req` is a handle created for `sequence_item` that is passed as parameter to class.
+
+So created handle for `req` using `uvm_create` macro which is equivalent to:
+
+```systemverilog
+req = sequence_item_type::type_id::create::("req", this).
+```
+`sequence_item_type` here is `yapp_packet`.
+
+![screenshot-5b](/screenshots/5b.png)
 
 #### yapp_incr_payload_seq
 

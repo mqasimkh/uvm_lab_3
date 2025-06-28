@@ -141,10 +141,13 @@ class yapp_repeat_addr_seq extends yapp_base_seq;
     int prev_addr;
     bit ok;
     `uvm_info(get_type_name(), "Executing yapp_repeat_addr_seq seq", UVM_LOW)
+    `uvm_create(req);
     start_item(req);
     ok = req.randomize();
     prev_addr = req.addr;
     finish_item(req);
+    // `uvm_do(req)
+    prev_addr = req.addr;
     `uvm_do_with(req, {addr == prev_addr;})
   endtask: body
 

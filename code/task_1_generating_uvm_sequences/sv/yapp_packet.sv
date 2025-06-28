@@ -58,7 +58,7 @@ class short_yapp_packet extends yapp_packet;
         super.new(name);
     endfunction: new
 
-    constraint c_1 {
+    constraint c_2 {
         addr inside {[0:1]};
         length inside {[1:15]};
     }
