@@ -2,9 +2,28 @@
 
 ## Table of Contents
 
+## Table of Contents
+
 - [Task_1](#task_1)
-  - [1. Creating Sequences](#1_Creating_Sequences)
+  - [1. Creating Sequences](#1-creating-sequences)
     - [yapp_1_seq](#yapp_1_seq)
+    - [yapp_012_seq](#yapp_012_seq)
+    - [yapp_111_seq](#yapp_111_seq)
+    - [yapp_repeat_addr_seq](#yapp_repeat_addr_seq)
+    - [yapp_incr_payload_seq](#yapp_incr_payload_seq)
+    - [yapp_exhaustive_seq](#yapp_exhaustive_seq)
+    - [test_exhaustive_seq_test](#test_exhaustive_seq_test)
+    - [yapp_rnd_seq](#yapp_rnd_seq)
+    - [six_yapp_seq](#six_yapp_seq)
+  - [2. Testing All Sequences](#testing-all-sequences)
+- [Task_2](#task_2)
+  - [1. moving files](#1-moving-files)
+  - [2. Updating yapp_tx_monitor](#2-updating-yapp_tx_monitor)
+  - [3. Updating yapp_tx_driver](#3-updating-yapp_tx_driver)
+  - [4. Adding new test to router_test_lib](#4-adding-new-test-to-router_test_lib)
+  - [5. Testing without DUT](#5-testing-without-dut)
+  - [6. Connecting to DUT](#6-connecting-to-dut)
+
 ---
 
 ## Task_1
@@ -501,9 +520,7 @@ As `yapp_012_seq` sequence is run, 3 packets are genereated, 1 with `addr == 0`,
 
 ### 6. Connecting to DUT
 
-Connected with DUT and ran the simulation.
-
-The first 
+Connected with DUT and ran the simulation. The LSB 2 bits of header represents the channel and remaining bits represents number of packets. 
 
 Results as expected.
 

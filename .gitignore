@@ -4,4 +4,4 @@ code/task_*_*/.simvision
 code/task_*_*/xrun.key
 code/task_*_*/xrun.history
 code/task_*_*/cov_work
-code/task_*_*/xcelium.d
+code/task_*_*/xcelium.*
