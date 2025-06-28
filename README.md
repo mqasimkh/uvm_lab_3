@@ -2,8 +2,6 @@
 
 ## Table of Contents
 
-## Table of Contents
-
 - [Task_1](#task_1)
   - [1. Creating Sequences](#1-creating-sequences)
     - [yapp_1_seq](#yapp_1_seq)
@@ -30,6 +28,9 @@
 ## Task_1
 
 In this task, need to create different sequences and learn about objection mechanism.
+
+***Click on Image to open its full size & clear version***.
+
 
 ### 1. Creating Sequences
 
