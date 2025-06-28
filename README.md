@@ -403,12 +403,9 @@ When we ran the test, the error was shown on terminal. When opened in gui mode, 
 
 **How could you fix these violations?**
 
-Added a new signal named `select` in base sequence class i.e. `yapp_packet`  Added `select` in base class because we pass packet base class parameter to `uvm_sequencer` so handle req is created for that class, so to keep things simple and use `req` handle which is created in uvm base_class.
+Added a new signal named `select` in base sequence class i.e. `yapp_packet`. Now `short_yapp_packet` class, edited the constraint so by default select is 0, and when it is zero, it should follow the constraint for addr to be `0` or `1`.
 
-Now `short_yapp_packet` class, edited the constraint so by default select is 0, and when it is zero, it should follow the constraint for addr to be `0` or `1`.
- 
 ---
-
 ## Task_2
 
 In this task, need to connect the YAPP UVC created in `task_1` with the `DUT` which is `YAPP Router` using `virtual interface.
