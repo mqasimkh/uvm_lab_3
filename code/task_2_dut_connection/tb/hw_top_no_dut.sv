@@ -27,9 +27,40 @@ module hw_top;
     .clock_period(32'd10)
   );
 
+  yapp_router dut(
+    .reset(reset),
+    .clock(clock),
+    .error(),
+
+    // YAPP interface
+    .in_data(in0.in_data),
+    .in_data_vld(in0.in_data_vld),
+    .in_suspend(in0.in_suspend),
+
+    // Output Channels
+    //Channel 0
+    .data_0(),
+    .data_vld_0(),
+    .suspend_0(1'b0),
+    //Channel 1
+    .data_1(),
+    .data_vld_1(),
+    .suspend_1(1'b0),
+    //Channel 2
+    .data_2(),
+    .data_vld_2(),
+    .suspend_2(1'b0),
+
+    // HBUS Interface 
+    .haddr(),
+    .hdata(),
+    .hen(),
+    .hwr_rd()
+    );
+
   initial begin
     reset <= 1'b0;
-    in0.in_suspend <= 1'b0;
+    // in0.in_suspend <= 1'b0;
     @(negedge clock)
       #1 reset <= 1'b1;
     @(negedge clock)

@@ -1,0 +1,56 @@
+
+#
+# Mnemonic Maps
+#
+mmap new  -reuse -name {Boolean as Logic} -radix %b -contents {{%c=FALSE -edgepriority 1 -shape low}
+{%c=TRUE -edgepriority 1 -shape high}}
+mmap new  -reuse -name {Example Map} -radix %x -contents {{%b=11???? -bgcolor orange -label REG:%x -linecolor yellow -shape bus}
+{%x=1F -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=2C -bgcolor red -label ERROR -linecolor white -shape EVENT}
+{%x=* -label %x -linecolor gray -shape bus}}
+
+array unset createdGroup
+array set createdGroup {}
+set id [waveform add -signals [subst  {
+	{[format {hw_top.in0.clock}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.in_data[7:0]}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_0[7:0]}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_1[7:0]}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_2[7:0]}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_vld_0}]}
+	} ]]
+waveform format $id -color #ffff00
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_vld_1}]}
+	} ]]
+waveform format $id -color #ffff00
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.data_vld_2}]}
+	} ]]
+waveform format $id -color #ffff00
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.in_data_vld}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {hw_top.dut.in_suspend}]}
+	} ]]
+set id [waveform add -signals [subst  {
+	{[format {$uvm:{uvm_test_top.tb.uvc.agent.driver}.Driver_YAPP_Packet}]}
+	} ]]
+waveform format $id -height 252
+set id [waveform add -signals [subst  {
+	{[format {$uvm:{uvm_test_top.tb.uvc.agent.monitor}.Monitor_YAPP_Packet}]}
+	} ]]
+waveform format $id -height 298
+
+waveform xview limits 104155.524ps 461655.524ps

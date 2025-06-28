@@ -498,3 +498,9 @@ As `yapp_012_seq` sequence is run, 3 packets are genereated, 1 with `addr == 0`,
 ![screenshot-17](/screenshots/17.png)
 
 ![screenshot-18](/screenshots/17.png)
+
+### 6. Connecting to DUT
+
+![screenshot-19](/screenshots/19.png)
+
+![screenshot-20](/screenshots/20.png)
