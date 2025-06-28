@@ -200,10 +200,15 @@ class yapp_rnd_seq extends yapp_base_seq;
     super.new(name);
   endfunction: new
 
+  constraint count_range{
+    count inside {[1:10]};
+  }
+
+
   task body();
     bit ok;
     `uvm_info(get_type_name(), "Executing yapp_rnd_seq sequence", UVM_LOW)
-    ok = randomize() with {count inside {[1:10]};};
+    ok = this.randomize();
     `uvm_info("Count", $sformatf("Count : %0d", count), UVM_LOW)
     assert (ok);
     repeat(count)
@@ -225,13 +230,17 @@ class six_yapp_seq extends yapp_base_seq;
     super.new(name);
   endfunction: new
 
-  yapp_rnd_seq s1;
+  yapp_rnd_seq six;
 
   task body();
-    `uvm_create(s1)
+    bit ok;
     `uvm_info(get_type_name(), "Executing six_yapp_seq sequence", UVM_LOW)
-    s1.count = 6;
-    `uvm_do(s1)
+    `uvm_create(six)
+    six.count.rand_mode(0);
+    six.count = 6;
+    ok = six.randomize();
+    `uvm_send(six)
+
   endtask: body
   
 endclass: six_yapp_seq

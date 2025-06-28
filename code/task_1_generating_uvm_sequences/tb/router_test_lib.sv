@@ -102,7 +102,7 @@ class exhaustive_seq_test extends base_test;
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
         set_type_override_by_type(yapp_packet::get_type(), short_yapp_packet::get_type());
-        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", six_yapp_seq::get_type());
+        uvm_config_wrapper::set(this, "tb.uvc.agent.sequencer.run_phase", "default_sequence", yapp_exhaustive_seq::get_type());
     endfunction: build_phase
 
 endclass: exhaustive_seq_test
