@@ -80,7 +80,7 @@ class yapp_1_seq extends yapp_base_seq;
     super.new(name);
   endfunction: new
 
-  virtual task body();
+  task body();
     `uvm_info(get_type_name(), "Executing yapp_1_seq sequence", UVM_LOW)
     `uvm_do_with(req, {addr==1;})
   endtask: body
@@ -98,11 +98,18 @@ class yapp_012_seq extends yapp_base_seq;
     super.new(name);
   endfunction: new
 
-  virtual task body();
+  task body();
+    bit ok;
     `uvm_info(get_type_name(), "Executing yapp_012 seq", UVM_LOW)
       `uvm_do_with(req, {addr == 0;})
       `uvm_do_with(req, {addr == 1;})
-      `uvm_do_with(req, {addr == 2;})
+      //`uvm_do_with(req, {addr == 2;})
+      `uvm_create(req);
+      start_item(req);
+      req.select = 1;
+      ok = req.randomize() with {addr == 2;};
+      assert (ok);
+      finish_item(req);
   endtask: body
 
 endclass: yapp_012_seq

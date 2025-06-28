@@ -200,7 +200,7 @@ Ran the test again to confirm if correct packets are generated, and all good til
 
 #### yapp_exhaustive_seq
 
-Created `yapp_exhaustive_seq` sequence which is nested sequence where created handles for all seuqneces and then created them using `uvm_do` macro. 
+To test all the sequences, created `yapp_exhaustive_seq` sequence which is nested sequence where created handles for all seuqneces and then created them using `uvm_do` macro. 
 
 Since `uvm_do` macro blocking, all these sequences will be implemented thru sequencer sequentially.
 
@@ -231,4 +231,62 @@ class yapp_exhaustive_seq extends yapp_base_seq;
 
 endclass: yapp_base_seq
 ```
-Ran the test again to confirm if correct packets are generated, and doesn't seem good. Something wrong, so will try to fix it and update again.
+
+#### test_exhaustive_seq_test
+
+Created a new test named `test_exhaustive_seq_test` which extends from `base_test`.
+
+In the test set default sequence to `yapp_exhaustive_seq` using uvm_config_wrapper::set method, and set the packet using `set_type_override_by_type` method to `short_yapp_packet`.
+
+Ran the test to test if all sequences are working correctly. All are working correctly, except `yapp_012_seq` due to conflicting constraint.
+
+In `short_yapp_packet` we added constraint that addr can be `0` or `1` but in `yapp_012_seq` we also added that 3rd packet should have `addr == 2`.
+
+Running the test in `gui` mode which stops on constraint violation and shows the line which is causing the contraint conflict.
+
+`Xcellium Terminal`
+
+![screenshot-7](/screenshots/7.png)
+
+`Constraint Debugger`
+
+![screenshot-8](/screenshots/8.png)
+
+Opened the sequences in waveform window, and only 3 transaction are generated, 1 for `yapp_1_seq` and 2 for `yapp_012_seq` as on 3rd where `addr == 2`, the program stopped.
+
+![screenshot-9](/screenshots/9.png)
+
+
+![screenshot-10](/screenshots/10.png)
+
+FIX
+
+Added a new signal named `select` in base sequence class i.e. `yapp_packet` 
+
+Added `select` in base class because we pass packet base class parameter to `uvm_sequencer` so handle req is created for that class, so to keep things simple and use `req` handle which is created in uvm base_class.
+
+Now `short_yapp_packet` class, edited the constraint so by default select is 0, and when it is zero, it should follow the constraint for addr to be `0` or `1`.
+
+When `select` is `1` this constraint is ignored.
+
+```systemverilog
+  constraint c_2 {
+    !select -> addr inside {[0:1]};
+    length inside {[1:15]};
+  }
+```
+
+Now in `yapp_012_seq` sequence, select `req.select = 1` and then manually create the packet using `start_item()` and `finish_item()` methods.
+
+```systemverilog
+  `uvm_create(req);
+  start_item(req);
+  req.select = 1;
+  ok = req.randomize() with {addr == 2;};
+  assert (ok);
+  finish_item(req);
+```
+
+Re-ran the test, and now all contraint conflicts are clear. Checked the transactions in waveform window and all are created.
+
+![screenshot-11](/screenshots/11.png)

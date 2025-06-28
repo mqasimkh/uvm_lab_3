@@ -6,6 +6,7 @@ class yapp_packet extends uvm_sequence_item;
     rand bit [5:0] length;
     rand bit [7:0] payload[];
     bit [7:0] parity;
+    bit select;
 
     rand parity_type_e parity_type;
 
@@ -59,9 +60,8 @@ class short_yapp_packet extends yapp_packet;
     endfunction: new
 
     constraint c_2 {
-        addr inside {[0:1]};
+        !select -> addr inside {[0:1]};
         length inside {[1:15]};
     }
-
 
 endclass: short_yapp_packet
