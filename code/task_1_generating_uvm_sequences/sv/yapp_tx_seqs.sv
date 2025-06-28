@@ -238,7 +238,7 @@ class six_yapp_seq extends yapp_base_seq;
     `uvm_create(six)
     six.count.rand_mode(0);
     six.count = 6;
-    ok = six.randomize();
+    //ok = six.randomize();
     `uvm_send(six)
 
   endtask: body
