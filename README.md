@@ -16,6 +16,7 @@
     - [yapp_rnd_seq](#yapp_rnd_seq)
     - [six_yapp_seq](#six_yapp_seq)
   - [2. Testing All Sequences](#testing-all-sequences)
+  - [Questions](#Questions)
 - [Task_2](#task_2)
   - [1. moving files](#1-moving-files)
   - [2. Updating yapp_tx_monitor](#2-updating-yapp_tx_monitor)
@@ -389,6 +390,23 @@ Added `yapp_rnd_seq` and `six_yapp_seq` inside `yapp_exhaustive_seq` and ran the
 
 ![screenshot-15](/screenshots/15.png)
 
+---
+### Questions
+
+**Why do you get randomization violations?**
+
+Ran the test to test if all sequences are working correctly. All are working correctly, except `yapp_012_seq` due to conflicting constraint. In `short_yapp_packet` we added constraint that addr can be `0` or `1` but in `yapp_012_seq` we also added that 3rd packet should have `addr == 2`.
+
+**When a constraint violation is found?**
+
+When we ran the test, the error was shown on terminal. When opened in gui mode, the simulation stopped at error point and opened Constraint Debugger.
+
+**How could you fix these violations?**
+
+Added a new signal named `select` in base sequence class i.e. `yapp_packet`  Added `select` in base class because we pass packet base class parameter to `uvm_sequencer` so handle req is created for that class, so to keep things simple and use `req` handle which is created in uvm base_class.
+
+Now `short_yapp_packet` class, edited the constraint so by default select is 0, and when it is zero, it should follow the constraint for addr to be `0` or `1`.
+ 
 ---
 
 ## Task_2
